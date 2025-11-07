@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CosmoCost Live — Cosmetic Costing Toolkit</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b1220">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>CosmoCost Live</h1>
+  <p class="tagline">Cost your formulas. Compare suppliers. Fetch live prices.</p>
+  <nav>
+    <button data-view="formula" class="active">Formula</button>
+    <button data-view="catalog">Catalog</button>
+    <button data-view="batch">Batch & Costs</button>
+    <button data-view="pricing">Pricing</button>
+    <button data-view="live">Live Prices (Beta)</button>
+    <button data-view="export">Export/Import</button>
+  </nav>
+</header>
+
+<main>
+<section id="formula" class="view active">
+  <div class="card">
+    <h2>Formula (by %)</h2>
+    <div class="grid2">
+      <div>
+        <label>Formula Name <input id="formulaName" placeholder="e.g., Hydration Shampoo Bar v1"></label>
+      </div>
+      <div class="right">
+        <button id="saveFormula">Save</button>
+        <button id="newFormula">New</button>
+        <select id="loadFormula"></select>
+        <button id="deleteFormula" class="danger">Delete</button>
+      </div>
+    </div>
+    <table id="formulaTable">
+      <thead>
+        <tr><th>Ingredient</th><th>%</th><th>Catalog Link</th><th></th></tr>
+      </thead>
+      <tbody id="formulaBody"></tbody>
+      <tfoot>
+        <tr><td><button id="addRow">+ Add Ingredient</button></td><td id="percentTotal">0%</td><td colspan="2" class="muted">Tip: total should be 100%</td></tr>
+      </tfoot>
+    </table>
+  </div>
+</section>
+
+<section id="catalog" class="view">
+  <div class="card">
+    <h2>Ingredient Catalog & Suppliers</h2>
+    <p class="muted">Local-first: add multiple suppliers per ingredient. App computes best effective $/kg (incl. shipping).</p>
+    <div class="grid2">
+      <input id="catalogSearch" placeholder="Search ingredient or supplier...">
+      <div class="right"><button id="addIngredient">+ New Ingredient</button></div>
+    </div>
+    <div id="catalogList"></div>
+  </div>
+</section>
+
+<section id="batch" class="view">
+  <div class="card">
+    <h2>Batch, Packaging & Overheads</h2>
+    <div class="grid3">
+      <label>Batch Size <input id="batchSize" type="number" value="1000"></label>
+      <label>Unit <select id="batchUnit"><option>g</option><option>kg</option><option>mL</option><option>L</option></select></label>
+      <label>Wastage % <input id="wastage" type="number" value="2"></label>
+      <label>Container Size <input id="fillSize" type="number" value="250"></label>
+      <label>Fill Unit <select id="fillUnit"><option>g</option><option>mL</option></select></label>
+      <label>Density (g/mL) <input id="density" type="number" value="1" step="0.001"></label>
+      <label>Container Cost (each) <input id="containerCost" type="number" value="1.20" step="0.01"></label>
+      <label>Label/Box (each) <input id="labelCost" type="number" value="0.80" step="0.01"></label>
+      <label>Other Pack (each) <input id="otherPackCost" type="number" value="0.20" step="0.01"></label>
+      <label>Labor per Batch <input id="laborBatch" type="number" value="45" step="0.1"></label>
+      <label>Overhead per Batch <input id="overheadBatch" type="number" value="20" step="0.1"></label>
+      <label>GST 10% (AU) <select id="gstOn"><option value="on" selected>On</option><option value="off">Off</option></select></label>
+    </div>
+    <button id="calcCosts">Calculate Costs</button>
+    <div id="costResults" class="results"></div>
+  </div>
+</section>
+
+<section id="pricing" class="view">
+  <div class="card">
+    <h2>Pricing Recommendations</h2>
+    <div class="grid3">
+      <label>Target Wholesale Margin % <input id="whMargin" type="number" value="40" step="1"></label>
+      <label>Target Retail Margin % <input id="rtMargin" type="number" value="60" step="1"></label>
+      <label>Round to <select id="roundTo">
+        <option value="0.05">$0.05</option>
+        <option value="0.10" selected>$0.10</option>
+        <option value="0.50">$0.50</option>
+        <option value="1">$1</option>
+      </select></label>
+    </div>
+    <button id="calcPrices">Calculate Prices</button>
+    <div id="priceResults" class="results"></div>
+  </div>
+</section>
+
+<section id="live" class="view">
+  <div class="card">
+    <h2>Live Prices (Beta)</h2>
+    <p class="muted">Paste a product URL from: New Directions AU, Escentials of Australia, Heirloom Body Care. The serverless function fetches the page and tries to detect the price.</p>
+    <div class="grid2">
+      <label>Product URL <input id="liveUrl" placeholder="https://..."></label>
+      <div class="right">
+        <button id="fetchLive">Fetch Price</button>
+      </div>
+    </div>
+    <div id="liveResult" class="results"></div>
+    <div class="card">
+      <h3>Save to Catalog</h3>
+      <div class="grid3">
+        <label>Ingredient Name <input id="liveIng" placeholder="e.g., Sodium Cocoyl Isethionate (SCI)"></label>
+        <label>Supplier <input id="liveSupplier" placeholder="e.g., New Directions AU"></label>
+        <label>Pack Size <input id="livePack" type="number" placeholder="1000"></label>
+        <label>Unit <select id="liveUnit"><option>g</option><option>kg</option><option>mL</option><option>L</option></select></label>
+        <label>Price (AUD) <input id="livePrice" type="number" step="0.01"></label>
+        <label>Shipping (AUD) <input id="liveShip" type="number" step="0.01" value="0"></label>
+      </div>
+      <button id="saveLiveToCatalog">Save Supplier Line</button>
+      <div id="saveLiveNotice" class="muted"></div>
+    </div>
+  </div>
+</section>
+
+<section id="export" class="view">
+  <div class="card">
+    <h2>Export / Import</h2>
+    <div class="grid2">
+      <button id="exportJSON">Export All Data (JSON)</button>
+      <label class="fileLabel">Import JSON <input id="importJSON" type="file" accept="application/json"></label>
+    </div>
+    <p class="muted">Data is stored only on your device (localStorage). Export to back up or move computers.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <small>© 2025 CosmoCost Live • Local-first PWA + Netlify Functions</small>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
