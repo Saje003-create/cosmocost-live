@@ -1,33 +1,31 @@
+/* Theme variables - light theme default. Generates color-scheme, backdrop, and dark-mode override. */
 
-:root{--bg:#0b1220;--fg:#f3f6fb;--mut:#93a0b5;--card:#111a2e;--line:#1b2744;--accent:#8bd3ff}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-header{padding:18px 14px;border-bottom:1px solid var(--line)}
-h1{margin:0;font-size:22px;letter-spacing:.3px}
-.tagline{margin:4px 0 0 0;color:var(--mut)}
-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-nav button{background:#0f1830;color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer}
-nav button.active{border-color:var(--accent)}
-main{max-width:1100px;margin:0 auto;padding:18px 14px}
-.view{display:none;animation:fade .2s ease}
-.view.active{display:block}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
-.grid2{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
-.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
-label{display:flex;flex-direction:column;gap:6px}
-input,select{background:#0d1530;border:1px solid #22345c;color:var(--fg);border-radius:8px;padding:8px}
-.right{text-align:right}
-.danger{border-color:#ff6b6b}
-#formulaTable{width:100%;border-collapse:collapse;margin-top:8px}
-#formulaTable th,#formulaTable td{border-bottom:1px solid var(--line);padding:8px;text-align:left}
-#formulaTable tfoot td{border:0}
-button{background:#0f1830;color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer}
-button:hover{border-color:var(--accent)}
-.results{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
-#catalogList .ing{border:1px solid var(--line);border-radius:12px;margin:10px 0;padding:10px;background:#0f1730}
-.ing h3{margin:0 0 6px 0}
-.supplier{border:1px dashed var(--line);border-radius:10px;padding:8px;margin:6px 0;background:#0c1327}
-.fileLabel{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer}
-.fileLabel input{display:none}
-.muted{color:var(--mut)}
-@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+:root {
+  color-scheme: light;
+
+  /* Core colors (light theme) */
+  --bg: #ffffff;            /* page background */
+  --fg: #0b1220;            /* primary text (deep navy for good contrast) */
+  --card: #f8fafc;          /* surface / cards (very light) */
+  --border: #e6e9ee;        /* dividers / hairlines */
+  --mut: #6b7280;           /* muted / secondary text */
+  --accent: #1d4ed8;        /* accent / primary actions */
+  --backdrop: rgba(11,18,32,0.6); /* semi-opaque overlay for modals */
+}
+
+::backdrop {
+  background-color: var(--backdrop);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #0b1220;
+    --fg: #f3f6fb;
+    --card: #111a2e;
+    --border: #1b2744;
+    --mut: #93a0b5;
+    --accent: #8bd3ff;
+    --backdrop: rgba(0,0,0,0.6);
+  }
+}
